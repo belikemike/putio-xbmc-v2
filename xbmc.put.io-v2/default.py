@@ -58,6 +58,7 @@ def populateDir(pluginUrl, pluginId, listing):
             screenshot,
             screenshot
         )
+        listItem.setInfo(item.content_type,{'Title':item.name})
 
         xp.addDirectoryItem(
             pluginId,
