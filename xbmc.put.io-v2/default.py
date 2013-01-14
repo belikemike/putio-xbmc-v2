@@ -58,7 +58,6 @@ def populateDir(pluginUrl, pluginId, listing):
             screenshot,
             screenshot
         )
-        listItem.setInfo(item.content_type,{'Title':item.name})
 
         xp.addDirectoryItem(
             pluginId,
@@ -71,11 +70,27 @@ def populateDir(pluginUrl, pluginId, listing):
 
 
 def play(item, subtitle=None):
+    # initialize xbmc.Player class
+    xbmc.output("subtitle"+str(subtitle))
     player = xbmc.Player()
-    if item.is_mp4_available:
-        player.play(item.mp4_stream_url)
+    if item.screenshot:
+        screenshot = item.screenshot
     else:
-        player.play(item.stream_url)    
+        screenshot = item.icon
+    # create a blank ListItem to add information about the stream to the player
+    # this is specifically to make the subtitle search plugin works much smoother
+
+    listitem = xg.ListItem(item.name,item.name,screenshot,screenshot)
+    listitem.setInfo(item.content_type, {
+        'originaltitle': item.name,
+        'title': item.name,
+        'sorttitle':item.name
+    })
+
+    if item.is_mp4_available:
+        player.play(item.mp4_stream_url,listitem)
+    else:
+        player.play(item.stream_url,listitem)
     if subtitle:
         player.setSubtitles(subtitle)
 
